@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CoolermanRat:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CoolermanRat_jar</output-path>
+    <root id="archive" name="CoolermanRat.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="CoolermanRat" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/1stleg/jnativehook/2.1.0/jnativehook-2.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/vatbub/mslinks/1.0.6.2/mslinks-1.0.6.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
